@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizzyCine</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    
+    <!-- Creator Info & Socials -->
+    <div class="creator-header">
+        <div class="about-tooltip-container">
+            <button class="about-btn" onclick="toggleAbout()"><i class="fa-solid fa-circle-info"></i> About</button>
+            <div id="about-tooltip" class="hidden">
+                <p><strong>QuizzyCine</strong> was created by <strong>Varun Kulkarni</strong> for a SkillsCraft Internship.</p>
+                <p>It uses Groq AI to instantly generate unique movie trivia based on deep lore and plot details. Your questions are even tracked locally so you never get a repeated question!</p>
+            </div>
+        </div>
+        <div class="social-links">
+            <a href="https://portfolio.varunkulkarni.dpdns.org/" target="_blank" title="Portfolio"><i class="fa-solid fa-briefcase"></i></a>
+            <a href="https://www.linkedin.com/in/varun-kulkarni-62036b324/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/VarunKulkarni15" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/varun_kulkarni__/?hl=en" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+    </div>
+    <!-- Screen 1: Movie Selection -->
+    <div id="selection-screen" class="screen active">
+        <!-- Main Page Mascot -->
+        <div id="main-cat-container">
+            <img id="main-cat-frame" src="/cat_animations/0001.png" alt="Animated Cat Mascot">
+        </div>
+        
+        <h1>QuizzyCine</h1>
+        <p class="subtitle">Our AI will generate custom trivia just for you!</p>
+        
+        <div class="search-container">
+            <input type="text" id="movie-search" placeholder="Search any movie..." autocomplete="off">
+            <div id="search-results-panel" class="hidden">
+                <!-- Live search results injected here -->
+            </div>
+        </div>
+
+        <div id="movie-grid" class="movie-grid">
+            <!-- Movie posters injected by JS -->
+        </div>
+    </div>
+
+    <!-- Screen 1.5: Setup Screen -->
+    <div id="setup-screen" class="screen">
+        <button class="back-btn" onclick="showScreen('selection-screen')">← Back to Search</button>
+        <div class="setup-container">
+            <img id="setup-movie-poster" src="" alt="Movie Poster">
+            <div class="setup-details">
+                <h2 id="setup-movie-title">Movie Title</h2>
+                <div class="movie-meta">
+                    <span id="setup-movie-year">Year</span> • <span id="setup-movie-genre">Genre</span>
+                </div>
+                <div class="movie-crew" style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.5;">
+                    🎬 <strong>Director:</strong> <span id="setup-movie-director">...</span><br>
+                    ✍️ <strong>Writer:</strong> <span id="setup-movie-writer">...</span>
+                </div>
+                <p id="setup-movie-plot" class="movie-plot">Loading plot...</p>
+                
+                <div class="input-group">
+                    <label>How many questions?</label>
+                    <div class="counter-control">
+                        <button class="counter-btn" onclick="changeCount(-1)">-</button>
+                        <input type="number" id="question-count" min="1" max="25" value="5" onchange="validateCount()">
+                        <button class="counter-btn" onclick="changeCount(1)">+</button>
+                    </div>
+                    <p class="hint">Select up to 25 questions.</p>
+                </div>
+                <button id="start-quiz-btn" onclick="startQuiz()">Start Quiz!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <button class="back-btn" onclick="resetGame()">← Quit</button>
+            <h2 id="current-movie-title">Movie Title</h2>
+            <div class="stats">
+                <span id="score-display">Score: 0/5</span>
+                <span id="timer-display">40s</span>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <h3 id="question-text">Loading AI Question...</h3>
+            <div id="options-grid" class="options-grid">
+                <!-- Options injected by JS -->
+            </div>
+            <!-- New Cat Animation Container -->
+            <div id="cat-animation-container">
+                <img id="cat-frame" src="../cat_animations/0001.png" alt="Animated Cat">
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 3: Results Screen -->
+    <div id="results-screen" class="screen">
+        <div id="results-cat-container">
+            <img id="results-cat" src="../cat score single image/Untitled.png" alt="Static Cat Mascot">
+        </div>
+        <h1 id="final-score-title">Quiz Complete!</h1>
+        <h2 id="final-score-text">You scored 0/5</h2>
+        <button id="play-again-btn" onclick="resetGame()">Play Again</button>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="correct-sound" src="/correct asnwer.mp3"></audio>
+    <audio id="wrong-sound" src="/wrong answer.mp3"></audio>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

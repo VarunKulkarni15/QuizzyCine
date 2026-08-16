@@ -1,0 +1,7 @@
+node_modules/
+.env
+dist/
+capture_canva.py
+pfp1.png
+tasks_screenshots/
+SCT_WD_1/
