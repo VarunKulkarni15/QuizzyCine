@@ -108,19 +108,17 @@ async function loadDefaultMovies() {
     const movieGrid = document.getElementById('movie-grid');
     movieGrid.innerHTML = ""; 
 
-    // Shuffle the array and pick 24 random movies
+    // Shuffle the array and pick 12 random movies for a faster load
     let shuffledMovies = [...allMovies];
     for (let i = shuffledMovies.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledMovies[i], shuffledMovies[j]] = [shuffledMovies[j], shuffledMovies[i]];
     }
-    const selectedMovies = shuffledMovies.slice(0, 24);
+    const selectedMovies = shuffledMovies.slice(0, 12);
 
-    // Fetch movies in small batches so we don't clog the browser's connection limit!
-    for (let i = 0; i < selectedMovies.length; i += 4) {
-        const chunk = selectedMovies.slice(i, i + 4);
-        await Promise.all(chunk.map(title => addMovieToGrid(title)));
-    }
+    // Start fetching all movies. The browser will natively queue the connections,
+    // allowing the fastest API responses to render instantly!
+    selectedMovies.forEach(title => addMovieToGrid(title));
 }
 
 async function addMovieToGrid(title) {
@@ -321,9 +319,8 @@ CRITICAL INSTRUCTIONS:
 4. Keep the 4 options VERY SHORT (maximum 5 words each).
 5. ${historyContext}
 
-Format the response STRICTLY as a JSON array of objects. 
-Each object must have: "question" (string), "options" (array of exactly 4 separate strings), "answer" (the exact string from options that is correct).
-Do not wrap it in markdown blockquotes, just return the raw JSON array.`;
+Format the response STRICTLY as a JSON object with a single key "questions" containing an array of objects. 
+Each object must have: "question" (string), "options" (array of exactly 4 separate strings), "answer" (the exact string from options that is correct).`;
 
     // Rotate Key!
     const keyToUse = GROQ_API_KEYS[apiKeyIndex];
@@ -338,7 +335,8 @@ Do not wrap it in markdown blockquotes, just return the raw JSON array.`;
         body: JSON.stringify({
             model: "llama-3.1-8b-instant",
             messages: [{ role: "user", content: prompt }],
-            temperature: 0.7
+            temperature: 0.7,
+            response_format: { type: "json_object" }
         })
     });
 
@@ -349,16 +347,8 @@ Do not wrap it in markdown blockquotes, just return the raw JSON array.`;
     const data = await response.json();
     let jsonString = data.choices[0].message.content.trim();
     
-    // Robust parsing: extract the JSON array part
-    const startIndex = jsonString.indexOf('[');
-    const endIndex = jsonString.lastIndexOf(']');
-    
-    if (startIndex !== -1 && endIndex !== -1) {
-        jsonString = jsonString.substring(startIndex, endIndex + 1);
-        currentQuestions = JSON.parse(jsonString);
-    } else {
-        throw new Error("Could not parse JSON array from AI response");
-    }
+    const parsedData = JSON.parse(jsonString);
+    currentQuestions = parsedData.questions;
     
     // Save these new questions to local storage to prevent future repeats!
     saveToMovieHistory(movieTitle, currentQuestions);
