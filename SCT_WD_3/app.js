@@ -124,7 +124,7 @@ async function loadDefaultMovies() {
     }
 }
 
-async function addMovieToGrid(title) {
+async function addMovieToGrid(title, retryCount = 0) {
     try {
         const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&t=${encodeURIComponent(title)}`);
         const data = await response.json();
@@ -142,6 +142,9 @@ async function addMovieToGrid(title) {
             `;
             card.onclick = () => openSetupScreen(data.Title, posterUrl);
             movieGrid.appendChild(card);
+        } else if (data.Error && data.Error.toLowerCase().includes("limit") && retryCount < OMDB_API_KEYS.length) {
+            // One of the API keys hit its limit! Retry with the next key!
+            await addMovieToGrid(title, retryCount + 1);
         }
     } catch (error) {
         console.error("Error fetching movie poster:", error);
