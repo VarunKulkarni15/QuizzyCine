@@ -148,9 +148,9 @@ body {
 }
 
 .control-btn {
-    width: 80px;
-    height: 80px;
-    border-radius: 12px; /* Rectangular with slightly rounded corners */
+    width: 130px;
+    height: 54px;
+    border-radius: 27px; /* Wide pill shape */
     border: 1px solid rgba(255, 255, 255, 0.05); /* Slight border for separation */
     outline: none;
     cursor: pointer;
