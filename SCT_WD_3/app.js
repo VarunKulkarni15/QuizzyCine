@@ -348,32 +348,57 @@ Each object must have: "question" (string), "options" (array of exactly 4 separa
     const keyToUse = GROQ_API_KEYS[apiKeyIndex];
     apiKeyIndex = (apiKeyIndex + 1) % GROQ_API_KEYS.length;
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${keyToUse}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            model: "openai/gpt-oss-120b",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.7,
-            response_format: { type: "json_object" }
-        })
-    });
+    // Fallback Models Array (in order of preference)
+    const modelsToTry = [
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "llama-3.1-8b-instant",
+        "llama3-8b-8192"
+    ];
 
-    if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+    let lastError = null;
+
+    for (const modelName of modelsToTry) {
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${keyToUse}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: modelName,
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0.7,
+                    response_format: { type: "json_object" }
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                console.warn(`Model ${modelName} failed:`, errData);
+                continue; // Try the next model
+            }
+
+            const data = await response.json();
+            let jsonString = data.choices[0].message.content.trim();
+            
+            const parsedData = JSON.parse(jsonString);
+            currentQuestions = parsedData.questions;
+            
+            // Save these new questions to local storage to prevent future repeats!
+            saveToMovieHistory(movieTitle, currentQuestions);
+            return; // Successfully fetched, exit the loop!
+
+        } catch (error) {
+            console.warn(`Error connecting to model ${modelName}:`, error);
+            lastError = error;
+            // Continue to next model
+        }
     }
 
-    const data = await response.json();
-    let jsonString = data.choices[0].message.content.trim();
-    
-    const parsedData = JSON.parse(jsonString);
-    currentQuestions = parsedData.questions;
-    
-    // Save these new questions to local storage to prevent future repeats!
-    saveToMovieHistory(movieTitle, currentQuestions);
+    // If we exhausted all models and none worked
+    throw lastError || new Error("All Groq models failed.");
 }
 
 function loadQuestion() {
