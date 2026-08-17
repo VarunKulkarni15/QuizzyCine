@@ -85,9 +85,11 @@ async function loadDefaultMovies() {
     }
     const selectedMovies = shuffledMovies.slice(0, 24);
 
-    // Fetch all movies in parallel for lightning-fast loading
-    const promises = selectedMovies.map(title => addMovieToGrid(title));
-    await Promise.all(promises);
+    // Fetch movies in small batches so we don't clog the browser's connection limit!
+    for (let i = 0; i < selectedMovies.length; i += 4) {
+        const chunk = selectedMovies.slice(i, i + 4);
+        await Promise.all(chunk.map(title => addMovieToGrid(title)));
+    }
 }
 
 async function addMovieToGrid(title) {
