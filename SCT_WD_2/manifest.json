@@ -1,0 +1,16 @@
+{
+  "name": "Precision Stopwatch",
+  "short_name": "Stopwatch",
+  "description": "A premium dynamic island stopwatch that works offline",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff9f0a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2088/2088617.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
