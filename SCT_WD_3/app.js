@@ -51,6 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.tagName === 'IMG') e.preventDefault();
     });
 
+    // Close menus on outside click
+    document.addEventListener('click', e => {
+        const navMenu = document.getElementById('nav-menu');
+        const hamburgerBtn = document.querySelector('.hamburger-btn');
+        const aboutTooltip = document.getElementById('about-tooltip');
+        const aboutBtn = document.querySelector('.about-btn');
+
+        if (navMenu && navMenu.classList.contains('show') && !navMenu.contains(e.target) && (!hamburgerBtn || !hamburgerBtn.contains(e.target))) {
+            navMenu.classList.remove('show');
+        }
+        if (aboutTooltip && !aboutTooltip.classList.contains('hidden') && !aboutTooltip.contains(e.target) && (!aboutBtn || !aboutBtn.contains(e.target))) {
+            aboutTooltip.classList.add('hidden');
+        }
+    });
+
     loadDefaultMovies();
 
 // Expose functions to the global window object for HTML onclick events
