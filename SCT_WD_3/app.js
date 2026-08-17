@@ -18,17 +18,19 @@ function getOmdbKey() {
 }
 
 // 1. Expanded Default Movies
-const allMovies = [
-    "The Matrix", "Inception", "Avengers: Endgame", "Interstellar", 
-    "Jurassic Park", "Titanic", "The Dark Knight", "Spider-Man", 
-    "The Godfather", "Fight Club", "Pulp Fiction", "Avatar",
-    "Loki", "Breaking Bad", "Stranger Things", "The Office",
-    "Blade Runner 2049", "Parasite", "Whiplash", "Get Out",
-    "The Truman Show", "Mad Max: Fury Road", "Goodfellas", "Gladiator",
-    "The Shawshank Redemption", "Forrest Gump", "The Lord of the Rings", 
-    "Star Wars", "The Silence of the Lambs", "Se7en", "Dune", 
-    "Oppenheimer", "Barbie", "Joker", "Deadpool", "The Batman",
-    "Everything Everywhere All at Once", "Spirited Away", "The Boys", "Game of Thrones"
+const defaultDashboardMovies = [
+    { title: "The Matrix", poster: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+    { title: "Inception", poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg" },
+    { title: "Interstellar", poster: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjNjYjZlY2Y3YWBiN2ZhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg" },
+    { title: "The Dark Knight", poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" },
+    { title: "Pulp Fiction", poster: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTItNDcxNi00ODgwLWEteN2ItMTRhZmUwMDBmMzdjXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+    { title: "Fight Club", poster: "https://m.media-amazon.com/images/M/MV5BMmEzNTkxYjQtZTc0OS00YTVjLTg5ZTEtZWMwOWVlYzY0NWIwXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg" },
+    { title: "Forrest Gump", poster: "https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" },
+    { title: "The Godfather", poster: "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg" },
+    { title: "Avatar", poster: "https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5MzRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg" },
+    { title: "Gladiator", poster: "https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODItNTNjMTRjNjVlY2RmXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+    { title: "Jurassic Park", poster: "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_SX300.jpg" },
+    { title: "Titanic", poster: "https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDPhY2E5My00NmVmLThmNjItMTQwOTZmMTU3MTk3XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" }
 ];
 
 let currentQuestions = [];
@@ -105,51 +107,60 @@ function toggleAbout() {
     document.getElementById('about-tooltip').classList.toggle('hidden');
 }
 
-async function loadDefaultMovies() {
+async function fetchOmdb(title, extraParams = "", retryCount = 0) {
+    try {
+        const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&t=${encodeURIComponent(title)}${extraParams}`);
+        const data = await response.json();
+        if (data.Response === "False" && data.Error && data.Error.toLowerCase().includes("limit") && retryCount < OMDB_API_KEYS.length) {
+            return await fetchOmdb(title, extraParams, retryCount + 1);
+        }
+        return data;
+    } catch (err) {
+        if (retryCount < OMDB_API_KEYS.length) {
+            return await fetchOmdb(title, extraParams, retryCount + 1);
+        }
+        throw err;
+    }
+}
+
+async function fetchOmdbSearch(query, retryCount = 0) {
+    try {
+        const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&s=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        if (data.Response === "False" && data.Error && data.Error.toLowerCase().includes("limit") && retryCount < OMDB_API_KEYS.length) {
+            return await fetchOmdbSearch(query, retryCount + 1);
+        }
+        return data;
+    } catch (err) {
+        if (retryCount < OMDB_API_KEYS.length) {
+            return await fetchOmdbSearch(query, retryCount + 1);
+        }
+        throw err;
+    }
+}
+
+function loadDefaultMovies() {
     const movieGrid = document.getElementById('movie-grid');
     movieGrid.innerHTML = ""; 
 
-    // Shuffle the array and pick 12 random movies for a faster load
-    let shuffledMovies = [...allMovies];
+    // Shuffle and pick to keep it fresh
+    let shuffledMovies = [...defaultDashboardMovies];
     for (let i = shuffledMovies.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledMovies[i], shuffledMovies[j]] = [shuffledMovies[j], shuffledMovies[i]];
     }
-    const selectedMovies = shuffledMovies.slice(0, 12);
 
-    // Fetch movies in small batches. 
-    // Firing all 12 at once triggers OMDB's burst rate-limit and drops half of them!
-    for (let i = 0; i < selectedMovies.length; i += 4) {
-        const chunk = selectedMovies.slice(i, i + 4);
-        await Promise.all(chunk.map(title => addMovieToGrid(title)));
-    }
-}
-
-async function addMovieToGrid(title, retryCount = 0) {
-    try {
-        const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&t=${encodeURIComponent(title)}`);
-        const data = await response.json();
-        
-        if (data.Response === "True") {
-            const movieGrid = document.getElementById('movie-grid');
-            const card = document.createElement('div');
-            card.className = 'movie-card';
-            
-            const posterUrl = data.Poster !== "N/A" ? data.Poster : FALLBACK_POSTER;
-            
-            card.innerHTML = `
-                <img src="${posterUrl}" alt="${data.Title}" onerror="this.onerror=null; this.src='${FALLBACK_POSTER}';">
-                <h3>${data.Title}</h3>
-            `;
-            card.onclick = () => openSetupScreen(data.Title, posterUrl);
-            movieGrid.appendChild(card);
-        } else if (data.Error && data.Error.toLowerCase().includes("limit") && retryCount < OMDB_API_KEYS.length) {
-            // One of the API keys hit its limit! Retry with the next key!
-            await addMovieToGrid(title, retryCount + 1);
-        }
-    } catch (error) {
-        console.error("Error fetching movie poster:", error);
-    }
+    // Instantly append them! Zero API calls!
+    shuffledMovies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+        card.innerHTML = `
+            <img src="${movie.poster}" alt="${movie.title}" onerror="this.onerror=null; this.src='${FALLBACK_POSTER}';">
+            <h3>${movie.title}</h3>
+        `;
+        card.onclick = () => openSetupScreen(movie.title, movie.poster);
+        movieGrid.appendChild(card);
+    });
 }
 
 // 2. Live Search Functionality
@@ -169,10 +180,9 @@ function setupLiveSearch() {
 
         debounceTimer = setTimeout(async () => {
             try {
-                const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&s=${encodeURIComponent(query)}`);
-                const data = await response.json();
-
-                resultsPanel.innerHTML = '';
+                const data = await fetchOmdbSearch(query);
+                
+                resultsPanel.innerHTML = "";
                 resultsPanel.classList.remove('hidden');
 
                 if (data.Response === "True") {
@@ -236,14 +246,15 @@ async function openSetupScreen(title, poster) {
 
     // Fetch full details
     try {
-        const response = await fetch(`https://www.omdbapi.com/?apikey=${getOmdbKey()}&t=${encodeURIComponent(title)}&plot=short`);
-        const data = await response.json();
+        const data = await fetchOmdb(title, "&plot=short");
         if (data.Response === "True") {
             document.getElementById('setup-movie-year').innerText = data.Year;
             document.getElementById('setup-movie-genre').innerText = data.Genre;
             document.getElementById('setup-movie-plot').innerText = data.Plot;
             document.getElementById('setup-movie-director').innerText = data.Director;
             document.getElementById('setup-movie-writer').innerText = data.Writer;
+        } else {
+            document.getElementById('setup-movie-plot').innerText = "Could not load movie details.";
         }
     } catch (err) {
         document.getElementById('setup-movie-plot').innerText = "Could not load movie details.";
