@@ -633,6 +633,19 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Responsive */
 @media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .top-nav {
+        position: relative;
+        top: 0;
+        right: 0;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
     .movie-grid {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 15px;
@@ -644,22 +657,36 @@ input[type=number]::-webkit-outer-spin-button {
         font-size: 2.2rem;
     }
     .setup-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        gap: 20px;
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+        padding: 15px;
+        gap: 15px;
     }
     #setup-movie-poster {
-        width: 180px;
+        width: 110px;
     }
     #setup-movie-title {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+    }
+    .movie-meta {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+    .movie-plot {
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+        -webkit-line-clamp: 3;
+    }
+    .input-group label {
+        font-size: 1rem;
     }
     #start-quiz-btn {
-        align-self: center;
+        align-self: stretch;
         width: 100%;
-        margin-top: 10px;
+        margin-top: 5px;
+        padding: 12px;
+        font-size: 1.2rem;
     }
     .game-header {
         flex-direction: row; 
