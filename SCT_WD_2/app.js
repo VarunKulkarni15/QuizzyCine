@@ -33,12 +33,73 @@ let lastLapTimestamp = 0;
 btnLeft.disabled = true;
 
 // -----------------------------------------
+// Local Storage Persistence
+// -----------------------------------------
+function saveState() {
+    const state = {
+        isRunning,
+        startTime,
+        elapsedTime,
+        laps,
+        lastLapTimestamp,
+        isDarkMode: body.classList.contains('dark-mode')
+    };
+    localStorage.setItem('stopwatch_state', JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('stopwatch_state');
+    if (saved) {
+        try {
+            const state = JSON.parse(saved);
+            isRunning = state.isRunning || false;
+            startTime = state.startTime || 0;
+            elapsedTime = state.elapsedTime || 0;
+            laps = state.laps || [];
+            lastLapTimestamp = state.lastLapTimestamp || 0;
+            
+            // Restore Theme
+            if (state.isDarkMode) {
+                body.classList.add('dark-mode');
+                iconMoon.classList.remove('hidden');
+                iconSun.classList.add('hidden');
+            } else {
+                body.classList.remove('dark-mode');
+                iconMoon.classList.add('hidden');
+                iconSun.classList.remove('hidden');
+            }
+
+            // Restore UI State
+            if (isRunning) {
+                timerPill.classList.add('running');
+                btnRight.textContent = 'Stop';
+                btnRight.className = 'control-btn btn-primary stop';
+                btnLeft.disabled = false;
+                btnLeft.textContent = 'Lap';
+                animationFrameId = requestAnimationFrame(updateTimer);
+            } else if (elapsedTime > 0) {
+                displayTime(elapsedTime);
+                btnRight.textContent = 'Resume';
+                btnRight.className = 'control-btn btn-primary start';
+                btnLeft.disabled = false;
+                btnLeft.textContent = 'Reset';
+            }
+
+            if (laps.length > 0) {
+                renderLapsAndStats();
+            }
+        } catch (e) {
+            console.error("Failed to load state", e);
+        }
+    }
+}
+
+// -----------------------------------------
 // Theme Toggle Logic
 // -----------------------------------------
 themeToggle.addEventListener('click', () => {
     body.classList.toggle('dark-mode');
     
-    // Toggle icons
     if (body.classList.contains('dark-mode')) {
         iconMoon.classList.remove('hidden');
         iconSun.classList.add('hidden');
@@ -46,15 +107,16 @@ themeToggle.addEventListener('click', () => {
         iconMoon.classList.add('hidden');
         iconSun.classList.remove('hidden');
     }
+    saveState();
 });
 
 // -----------------------------------------
 // Core Timing Engine
 // -----------------------------------------
-function updateTimer(timestamp) {
+function updateTimer() {
     if (!isRunning) return;
 
-    const currentTotalTime = elapsedTime + (performance.now() - startTime);
+    const currentTotalTime = elapsedTime + (Date.now() - startTime);
     displayTime(currentTotalTime);
     
     animationFrameId = requestAnimationFrame(updateTimer);
@@ -79,7 +141,7 @@ function toggleStartStop() {
         // STOP
         isRunning = false;
         cancelAnimationFrame(animationFrameId);
-        elapsedTime += performance.now() - startTime;
+        elapsedTime += Date.now() - startTime;
 
         // UI Updates
         timerPill.classList.remove('running');
@@ -90,7 +152,7 @@ function toggleStartStop() {
     } else {
         // START
         isRunning = true;
-        startTime = performance.now();
+        startTime = Date.now();
         
         if (elapsedTime === 0 && laps.length === 0) {
             lastLapTimestamp = 0;
@@ -106,6 +168,7 @@ function toggleStartStop() {
         btnLeft.disabled = false;
         btnLeft.textContent = 'Lap';
     }
+    saveState();
 }
 
 function handleLeftButton() {
@@ -136,13 +199,14 @@ function resetTimer() {
     
     btnRight.textContent = 'Start';
     btnRight.className = 'control-btn btn-primary start';
+    saveState();
 }
 
 // -----------------------------------------
 // Lap & Statistics Logic
 // -----------------------------------------
 function recordLap() {
-    const currentTotalTime = elapsedTime + (performance.now() - startTime);
+    const currentTotalTime = elapsedTime + (Date.now() - startTime);
     const lapSplit = currentTotalTime - lastLapTimestamp;
     
     laps.unshift({
@@ -153,6 +217,7 @@ function recordLap() {
     
     lastLapTimestamp = currentTotalTime;
     renderLapsAndStats();
+    saveState();
 }
 
 function renderLapsAndStats() {
@@ -244,3 +309,6 @@ document.addEventListener('keydown', (e) => {
         if (!isRunning && elapsedTime > 0) resetTimer();
     }
 });
+
+// Boot up
+document.addEventListener('DOMContentLoaded', loadState);

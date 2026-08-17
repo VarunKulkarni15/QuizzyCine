@@ -10,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff9f0a">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
@@ -92,5 +96,14 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => console.log('ServiceWorker registered'))
+                    .catch(error => console.log('ServiceWorker registration failed:', error));
+            });
+        }
+    </script>
 </body>
 </html>
