@@ -593,10 +593,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Results Screen */
 #results-screen {
-    background: var(--card-bg);
-    border: 2px solid var(--card-border);
-    border-radius: 16px;
-    padding: 60px;
+    padding: 20px;
     max-width: 600px;
     text-align: center;
 }
@@ -637,6 +634,10 @@ input[type=number]::-webkit-outer-spin-button {
         flex-direction: column;
         justify-content: flex-start;
     }
+    .screen {
+        justify-content: flex-start;
+        padding-top: 20px;
+    }
     .top-nav {
         position: relative;
         top: 0;
@@ -645,6 +646,9 @@ input[type=number]::-webkit-outer-spin-button {
         width: 100%;
         margin-bottom: 20px;
         margin-top: 20px;
+    }
+    .about-btn span {
+        display: none;
     }
     .movie-grid {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));

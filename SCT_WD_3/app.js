@@ -67,6 +67,16 @@ window.showScreen = showScreen;
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
+    
+    // Hide top-nav during the game so it doesn't overlap on mobile!
+    const topNav = document.querySelector('.top-nav');
+    if (topNav) {
+        if (screenId === 'game-screen') {
+            topNav.style.display = 'none';
+        } else {
+            topNav.style.display = 'flex';
+        }
+    }
 }
 
 function toggleAbout() {
@@ -286,10 +296,12 @@ ${history.map((q, i) => `${i+1}. ${q}`).join('\n')}`;
 CRITICAL INSTRUCTIONS:
 1. FOCUS ON DEEP LORE, PLOT EVENTS, SCENES, AND WORLD-BUILDING.
 2. DO NOT ASK ABOUT ACTORS, DIRECTORS, OR REAL-WORLD CAST/CREW.
-3. ${historyContext}
+3. Keep questions VERY SHORT and concise (maximum 15 words).
+4. Keep the 4 options VERY SHORT (maximum 5 words each).
+5. ${historyContext}
 
 Format the response STRICTLY as a JSON array of objects. 
-Each object must have: "question" (string), "options" (array of 4 strings), "answer" (the exact string from options that is correct).
+Each object must have: "question" (string), "options" (array of exactly 4 separate strings), "answer" (the exact string from options that is correct).
 Do not wrap it in markdown blockquotes, just return the raw JSON array.`;
 
     // Rotate Key!
