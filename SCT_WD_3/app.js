@@ -55,6 +55,7 @@ window.validateCount = validateCount;
 window.selectAnswer = selectAnswer;
 window.resetGame = resetGame;
 window.toggleAbout = toggleAbout;
+window.showScreen = showScreen;
     setupLiveSearch();
 });
 
@@ -71,13 +72,13 @@ async function loadDefaultMovies() {
     const movieGrid = document.getElementById('movie-grid');
     movieGrid.innerHTML = ""; 
 
-    // Shuffle the array and pick 12 random movies
+    // Shuffle the array and pick 24 random movies
     let shuffledMovies = [...allMovies];
     for (let i = shuffledMovies.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledMovies[i], shuffledMovies[j]] = [shuffledMovies[j], shuffledMovies[i]];
     }
-    const selectedMovies = shuffledMovies.slice(0, 12);
+    const selectedMovies = shuffledMovies.slice(0, 24);
 
     for (const title of selectedMovies) {
         await addMovieToGrid(title);
@@ -415,49 +416,11 @@ function resetGame() {
 }
 
 
-// Cat Animation Engine (Adaptive Framerate)
-let isAnimatingCat = false;
-let currentFrame = 1;
-const TOTAL_FRAMES = 240; 
-
-// Start animation on main page immediately
-startCatAnimation();
-
+// Cat Animation Engine (Now handled natively by WebP)
 function startCatAnimation() {
-    if (isAnimatingCat) return;
-    isAnimatingCat = true;
-    
-    const catImage = document.getElementById('cat-frame');
-    const mainCatImage = document.getElementById('main-cat-frame');
-    
-    function playNextFrame() {
-        if (!isAnimatingCat) return;
-
-        const formattedNumber = String(currentFrame).padStart(4, '0');
-        const imgSrc = `/cat_animations/${formattedNumber}.png`;
-        
-        const tempImg = new Image();
-        tempImg.onload = () => {
-            if (catImage) catImage.src = imgSrc;
-            if (mainCatImage) mainCatImage.src = imgSrc;
-            
-            currentFrame++;
-            if (currentFrame > TOTAL_FRAMES) currentFrame = 1;
-            
-            setTimeout(playNextFrame, 41);
-        };
-        tempImg.onerror = () => {
-            currentFrame++;
-            if (currentFrame > TOTAL_FRAMES) currentFrame = 1;
-            setTimeout(playNextFrame, 41);
-        };
-        
-        tempImg.src = imgSrc;
-    }
-    
-    playNextFrame();
+    // Left empty for compatibility if called elsewhere
 }
 
 function stopCatAnimation() {
-    isAnimatingCat = false;
+    // Left empty for compatibility if called elsewhere
 }
