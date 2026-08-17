@@ -633,23 +633,37 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 15px;
+    }
     .options-grid {
         grid-template-columns: 1fr;
     }
     h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     .setup-container {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        padding: 20px;
+        gap: 20px;
+    }
+    #setup-movie-poster {
+        width: 180px;
+    }
+    #setup-movie-title {
+        font-size: 1.8rem;
     }
     #start-quiz-btn {
         align-self: center;
+        width: 100%;
+        margin-top: 10px;
     }
     .game-header {
         flex-direction: row; 
-        padding: 15px;
+        padding: 10px;
         font-size: 0.9rem;
     }
     .game-header h2 {
