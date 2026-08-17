@@ -7,7 +7,8 @@ const GROQ_API_KEYS = [
 ];
 const OMDB_API_KEYS = [
     import.meta.env.VITE_OMDB_API_KEY_1,
-    import.meta.env.VITE_OMDB_API_KEY_2
+    import.meta.env.VITE_OMDB_API_KEY_2,
+    import.meta.env.VITE_OMDB_API_KEY_3
 ];
 let omdbKeyIndex = 0;
 function getOmdbKey() {
