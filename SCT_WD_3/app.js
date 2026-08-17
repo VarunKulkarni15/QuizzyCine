@@ -355,7 +355,7 @@ Each object must have: "question" (string), "options" (array of exactly 4 separa
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            model: "openai/gpt-oss-20b",
+            model: "openai/gpt-oss-120b",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.7,
             response_format: { type: "json_object" }
