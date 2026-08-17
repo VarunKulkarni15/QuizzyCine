@@ -5,7 +5,9 @@ const GROQ_API_KEYS = [
     import.meta.env.VITE_GROQ_API_KEY_2,
     import.meta.env.VITE_GROQ_API_KEY_3,
     import.meta.env.VITE_GROQ_API_KEY_4,
-    import.meta.env.VITE_GROQ_API_KEY_5
+    import.meta.env.VITE_GROQ_API_KEY_5,
+    import.meta.env.VITE_GROQ_API_KEY_6,
+    import.meta.env.VITE_GROQ_API_KEY_7
 ];
 const OMDB_API_KEYS = [
     import.meta.env.VITE_OMDB_API_KEY_1,
