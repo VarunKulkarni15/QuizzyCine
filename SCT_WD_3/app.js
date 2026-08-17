@@ -60,6 +60,7 @@ window.validateCount = validateCount;
 window.selectAnswer = selectAnswer;
 window.resetGame = resetGame;
 window.toggleAbout = toggleAbout;
+window.toggleMenu = toggleMenu;
 window.showScreen = showScreen;
     setupLiveSearch();
 });
@@ -68,15 +69,20 @@ function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
     
-    // Hide top-nav during the game so it doesn't overlap on mobile!
-    const topNav = document.querySelector('.top-nav');
-    if (topNav) {
+    // Hide creator-header during the game so it doesn't overlap on mobile!
+    const header = document.querySelector('.creator-header');
+    if (header) {
         if (screenId === 'game-screen') {
-            topNav.style.display = 'none';
+            header.style.display = 'none';
         } else {
-            topNav.style.display = 'flex';
+            header.style.display = 'block';
         }
     }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('nav-menu');
+    menu.classList.toggle('show');
 }
 
 function toggleAbout() {

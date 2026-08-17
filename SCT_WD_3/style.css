@@ -82,6 +82,16 @@ body {
     z-index: 100;
 }
 
+.hamburger-btn {
+    display: none;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .about-tooltip-container {
     position: relative;
 }
@@ -638,14 +648,48 @@ input[type=number]::-webkit-outer-spin-button {
         justify-content: flex-start;
         padding-top: 20px;
     }
-    .top-nav {
-        position: relative;
-        top: 0;
+    .creator-header {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+        width: auto;
+        margin: 0;
+    }
+    .hamburger-btn {
+        display: block;
+        background: var(--card-bg);
+        border: 2px solid var(--card-border);
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
         right: 0;
-        justify-content: center;
-        width: 100%;
-        margin-bottom: 20px;
-        margin-top: 20px;
+        background: var(--card-bg);
+        border: 2px solid var(--accent);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        gap: 15px;
+        align-items: center;
+    }
+    .nav-menu.show {
+        display: flex;
+    }
+    #about-tooltip {
+        top: 100%;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 250px;
+        margin-top: 10px;
     }
     .about-btn span {
         display: none;
@@ -661,14 +705,18 @@ input[type=number]::-webkit-outer-spin-button {
         font-size: 2.2rem;
     }
     .setup-container {
-        flex-direction: row;
-        align-items: flex-start;
+        display: block;
         text-align: left;
         padding: 15px;
-        gap: 15px;
     }
     #setup-movie-poster {
         width: 110px;
+        float: left;
+        margin-right: 15px;
+        margin-bottom: 10px;
+    }
+    .setup-details {
+        display: block;
     }
     #setup-movie-title {
         font-size: 1.5rem;
