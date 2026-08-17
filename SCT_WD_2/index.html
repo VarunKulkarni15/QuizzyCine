@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Stopwatch</title>
+    
+    <!-- Fonts: Inter for that clean, Apple-like UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+    
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+        <svg id="icon-sun" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+
+    <div class="app-container">
+        
+        <!-- The Dynamic Island Pill -->
+        <div class="timer-pill" id="timer-pill">
+            <div class="timer-header">
+                <span class="timer-title">Stopwatch</span>
+                <span class="timer-bell">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-5 4c0 1.1-.9 2-2 2s-2-.9-2-2h4z"/></svg>
+                </span>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="timer-display" id="timer-display">
+                <span id="minutes">00</span><span class="colon">:</span><span id="seconds">00</span><span class="dot">.</span><span id="milliseconds">00</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <!-- Left Button: Lap / Reset -->
+                <button id="btn-left" class="control-btn btn-secondary">
+                    <span class="btn-inner">Lap</span>
+                </button>
+                
+                <!-- Right Button: Start / Stop -->
+                <button id="btn-right" class="control-btn btn-primary start">
+                    <span class="btn-inner">Start</span>
+                </button>
+            </div>
+            
+            <!-- Progress Ring border effect -->
+            <div class="pill-ring" id="pill-ring"></div>
+        </div>
+
+        <!-- Lap Statistics -->
+        <div class="stats-container hidden" id="stats-container">
+            <div class="stat-box fastest-stat">
+                <span class="stat-label">FASTEST</span>
+                <span class="stat-val" id="stat-fastest">--:--.--</span>
+            </div>
+            <div class="stat-box average-stat">
+                <span class="stat-label">AVERAGE</span>
+                <span class="stat-val" id="stat-average">--:--.--</span>
+            </div>
+            <div class="stat-box slowest-stat">
+                <span class="stat-label">SLOWEST</span>
+                <span class="stat-val" id="stat-slowest">--:--.--</span>
+            </div>
+        </div>
+
+        <!-- Laps Table -->
+        <div class="laps-table-container">
+            <table class="laps-table">
+                <thead>
+                    <tr>
+                        <th>LAP</th>
+                        <th>SPLIT</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="laps-tbody">
+                    <!-- Laps will be injected here via JS -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Keyboard Shortcuts Hint -->
+    <div class="shortcuts-hint">
+        <span class="key">Space</span> Start/Pause &nbsp;&middot;&nbsp; 
+        <span class="key">L</span> Lap &nbsp;&middot;&nbsp; 
+        <span class="key">R</span> Reset
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
