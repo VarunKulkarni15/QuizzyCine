@@ -116,9 +116,12 @@ async function loadDefaultMovies() {
     }
     const selectedMovies = shuffledMovies.slice(0, 12);
 
-    // Start fetching all movies. The browser will natively queue the connections,
-    // allowing the fastest API responses to render instantly!
-    selectedMovies.forEach(title => addMovieToGrid(title));
+    // Fetch movies in small batches. 
+    // Firing all 12 at once triggers OMDB's burst rate-limit and drops half of them!
+    for (let i = 0; i < selectedMovies.length; i += 4) {
+        const chunk = selectedMovies.slice(i, i + 4);
+        await Promise.all(chunk.map(title => addMovieToGrid(title)));
+    }
 }
 
 async function addMovieToGrid(title) {
