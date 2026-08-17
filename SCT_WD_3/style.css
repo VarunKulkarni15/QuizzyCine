@@ -20,6 +20,12 @@
     font-family: 'Outfit', sans-serif;
 }
 
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -moz-window-dragging: none;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;

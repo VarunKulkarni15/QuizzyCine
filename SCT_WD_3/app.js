@@ -38,7 +38,7 @@ let timeLeft = 40;
 let totalQuestionsToAsk = 5; // Default
 
 // Custom SVG Fallback for Missing/Broken Posters
-const FALLBACK_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450"><rect width="300" height="450" fill="#2b2422"/><text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="48" fill="#3d3330">🎬</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#a89f9d" font-weight="bold">POSTER UNAVAILABLE</text></svg>`);
+const FALLBACK_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450"><rect width="300" height="450" fill="#2b2422"/><path d="M110 170 h80 v60 h-80 z" fill="none" stroke="#4a3e3b" stroke-width="6" stroke-linejoin="round"/><circle cx="150" cy="200" r="15" fill="none" stroke="#4a3e3b" stroke-width="6"/><path d="M125 170 l15 -20 h20 l15 20" fill="none" stroke="#4a3e3b" stroke-width="6" stroke-linejoin="round"/><text x="50%" y="270" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#a89f9d" font-weight="bold" letter-spacing="1">POSTER UNAVAILABLE</text></svg>`);
 
 // Selected Movie State
 let selectedMovieTitle = "";
@@ -46,6 +46,11 @@ let selectedMoviePoster = "";
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    // Block right-click on all images
+    document.addEventListener('contextmenu', e => {
+        if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+
     loadDefaultMovies();
 
 // Expose functions to the global window object for HTML onclick events
@@ -80,9 +85,9 @@ async function loadDefaultMovies() {
     }
     const selectedMovies = shuffledMovies.slice(0, 24);
 
-    for (const title of selectedMovies) {
-        await addMovieToGrid(title);
-    }
+    // Fetch all movies in parallel for lightning-fast loading
+    const promises = selectedMovies.map(title => addMovieToGrid(title));
+    await Promise.all(promises);
 }
 
 async function addMovieToGrid(title) {
