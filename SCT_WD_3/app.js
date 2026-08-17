@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.startQuiz = startQuiz;
 window.changeCount = changeCount;
 window.validateCount = validateCount;
-window.submitAnswer = submitAnswer;
+window.selectAnswer = selectAnswer;
 window.resetGame = resetGame;
 window.toggleAbout = toggleAbout;
     setupLiveSearch();
@@ -415,8 +415,8 @@ function resetGame() {
 }
 
 
-// Cat Animation Engine (24fps Image Sequence)
-let catAnimationInterval;
+// Cat Animation Engine (Adaptive Framerate)
+let isAnimatingCat = false;
 let currentFrame = 1;
 const TOTAL_FRAMES = 240; 
 
@@ -424,24 +424,40 @@ const TOTAL_FRAMES = 240;
 startCatAnimation();
 
 function startCatAnimation() {
-    if (catAnimationInterval) clearInterval(catAnimationInterval);
+    if (isAnimatingCat) return;
+    isAnimatingCat = true;
     
     const catImage = document.getElementById('cat-frame');
     const mainCatImage = document.getElementById('main-cat-frame');
     
-    catAnimationInterval = setInterval(() => {
+    function playNextFrame() {
+        if (!isAnimatingCat) return;
+
         const formattedNumber = String(currentFrame).padStart(4, '0');
         const imgSrc = `/cat_animations/${formattedNumber}.png`;
         
-        if (catImage) catImage.src = imgSrc;
-        if (mainCatImage) mainCatImage.src = imgSrc;
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            if (catImage) catImage.src = imgSrc;
+            if (mainCatImage) mainCatImage.src = imgSrc;
+            
+            currentFrame++;
+            if (currentFrame > TOTAL_FRAMES) currentFrame = 1;
+            
+            setTimeout(playNextFrame, 41);
+        };
+        tempImg.onerror = () => {
+            currentFrame++;
+            if (currentFrame > TOTAL_FRAMES) currentFrame = 1;
+            setTimeout(playNextFrame, 41);
+        };
         
-        currentFrame++;
-        if (currentFrame > TOTAL_FRAMES) {
-            currentFrame = 1; 
-        }
-    }, 41); 
+        tempImg.src = imgSrc;
+    }
+    
+    playNextFrame();
 }
 
 function stopCatAnimation() {
+    isAnimatingCat = false;
 }
