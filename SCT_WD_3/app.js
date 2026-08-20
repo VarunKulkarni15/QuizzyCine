@@ -51,12 +51,32 @@ const FALLBACK_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xm
 let selectedMovieTitle = "";
 let selectedMoviePoster = "";
 
+// Global function to request Push Notifications
+window.requestPushNotification = function() {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+        return;
+    }
+    
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            new Notification("Subscribed to QuizzyCine!", {
+                body: "You will now receive updates about new movie trivia and features.",
+                icon: "cat_mascot.webp"
+            });
+        }
+    });
+};
+
 // Global function to accept cookies
 window.acceptCookies = function() {
     localStorage.setItem('quizzycine_cookie_consent', 'true');
     document.getElementById('cookie-banner').classList.remove('show');
-    // Note: We DO NOT automatically prompt for push notifications here. 
-    // The user must click the dedicated 'Subscribe' button to prompt for notifications.
+    
+    // Prompt for notifications immediately after accepting cookies
+    setTimeout(() => {
+        window.requestPushNotification();
+    }, 500);
 };
 
 // Initialize App
