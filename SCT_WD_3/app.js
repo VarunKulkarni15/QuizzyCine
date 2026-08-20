@@ -48,6 +48,9 @@ let totalQuestionsToAsk = 5; // Default
 const FALLBACK_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450"><rect width="300" height="450" fill="#2b2422"/><path d="M110 170 h80 v60 h-80 z" fill="none" stroke="#4a3e3b" stroke-width="6" stroke-linejoin="round"/><circle cx="150" cy="200" r="15" fill="none" stroke="#4a3e3b" stroke-width="6"/><path d="M125 170 l15 -20 h20 l15 20" fill="none" stroke="#4a3e3b" stroke-width="6" stroke-linejoin="round"/><text x="50%" y="270" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#a89f9d" font-weight="bold" letter-spacing="1">POSTER UNAVAILABLE</text></svg>`);
 
 // Selected Movie State
+let selectedMovieTitle = "";
+let selectedMoviePoster = "";
+
 // Global function to accept cookies
 window.acceptCookies = function(shouldNotify = false) {
     localStorage.setItem('quizzycine_cookie_consent', 'true');
