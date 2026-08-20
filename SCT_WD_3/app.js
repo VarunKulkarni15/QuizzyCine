@@ -51,8 +51,24 @@ const FALLBACK_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xm
 let selectedMovieTitle = "";
 let selectedMoviePoster = "";
 
+// Global function to accept cookies
+window.acceptCookies = function() {
+    localStorage.setItem('quizzycine_cookie_consent', 'true');
+    document.getElementById('cookie-banner').classList.remove('show');
+    // Note: We DO NOT automatically prompt for push notifications here. 
+    // The user must click the dedicated 'Subscribe' button to prompt for notifications.
+};
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Check cookie consent
+    if (!localStorage.getItem('quizzycine_cookie_consent')) {
+        setTimeout(() => {
+            document.getElementById('cookie-banner').classList.add('show');
+        }, 1000);
+    }
+
     // Block right-click on all images
     document.addEventListener('contextmenu', e => {
         if (e.target.tagName === 'IMG') e.preventDefault();

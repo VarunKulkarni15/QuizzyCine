@@ -44,6 +44,10 @@
                     <p>It uses Groq AI to instantly generate unique movie trivia based on deep lore and plot details. Your questions are even tracked locally so you never get a repeated question!</p>
                 </div>
             </div>
+            
+            <!-- Push Notification Subscribe Button -->
+            <button class="about-btn" onclick="window.avero && window.avero.promptPush()"><i class="fa-solid fa-bell"></i> <span>Subscribe</span></button>
+            
             <div class="social-links">
                 <a href="https://portfolio.varunkulkarni.dpdns.org/" target="_blank" title="Portfolio"><i class="fa-solid fa-briefcase"></i></a>
                 <a href="https://www.linkedin.com/in/varun-kulkarni-62036b324/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
@@ -141,6 +145,20 @@
     <audio id="correct-sound" src="/correct asnwer.mp3"></audio>
     <audio id="wrong-sound" src="/wrong answer.mp3"></audio>
 
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-content">
+            <i class="fa-solid fa-cookie-bite cookie-icon"></i>
+            <div>
+                <h4>Cookie Settings</h4>
+                <p>We use local cookies to save your movie trivia scores and ensure you don't get duplicate questions. We respect your privacy.</p>
+            </div>
+        </div>
+        <div class="cookie-actions">
+            <button class="cookie-btn accept" onclick="acceptCookies()">Got it!</button>
+        </div>
+    </div>
+    
     <script type="module" src="./app.js"></script>
 </body>
 </html>
