@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://averosignals.dpdns.org/api/sdk" data-project-id="62427dbe-5161-4ead-99b2-c8112d165463"></script>
 </head>
 <body>
     
@@ -44,9 +45,6 @@
                     <p>It uses Groq AI to instantly generate unique movie trivia based on deep lore and plot details. Your questions are even tracked locally so you never get a repeated question!</p>
                 </div>
             </div>
-            
-            <!-- Push Notification Subscribe Button -->
-            <button class="about-btn" onclick="requestPushNotification()"><i class="fa-solid fa-bell"></i> <span>Subscribe</span></button>
             
             <div class="social-links">
                 <a href="https://portfolio.varunkulkarni.dpdns.org/" target="_blank" title="Portfolio"><i class="fa-solid fa-briefcase"></i></a>
@@ -154,8 +152,9 @@
                 <p>We use local cookies to save your movie trivia scores and ensure you don't get duplicate questions. We respect your privacy.</p>
             </div>
         </div>
-        <div class="cookie-actions">
-            <button class="cookie-btn accept" onclick="acceptCookies()">Got it!</button>
+        <div class="cookie-actions" style="display: flex; gap: 10px;">
+            <button class="cookie-btn accept" onclick="acceptCookies(false)">Accept</button>
+            <button class="cookie-btn accept" onclick="acceptCookies(true)">Accept & Notify</button>
         </div>
     </div>
     
